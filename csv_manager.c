@@ -3,11 +3,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "subscriber.h"
-
 void trim(char* s){
     if(!s) return;
     size_t i=0; while(s[i] && isspace((unsigned char)s[i])) i++;
