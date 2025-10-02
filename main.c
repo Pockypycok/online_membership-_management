@@ -1,67 +1,54 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include "csv_manager.h"
+#include <string.h>
+#include "subscriber.h"
 
-static void print_user(const User* u){
-    printf("- %s | %s | %s\n", u->name, u->address, u->phone);
+static void print_sub(const Subscriber* s){
+    printf("- %s | %s | %s | %s\n", s->name, s->service, s->start_date, s->duration);
 }
 
 static void show_all(const char* path){
-    User* arr=NULL; int n = read_all_users(path, &arr);
-    if(n<=0){ printf("(no data)\n"); free(arr); return; }
-    for(int i=0;i<n;i++) print_user(&arr[i]);
+    Subscriber* arr=NULL; int n = read_all_users(path, &arr);
+    if(n<=0){ printf("(ไม่มีข้อมูล)\n"); free(arr); return; }
+    for(int i=0;i<n;i++) print_sub(&arr[i]);
     free(arr);
 }
 
 int main(int argc, char** argv){
-    const char* csv_path = (argc > 1) ? argv[1] : "data/users.csv";
-    system("mkdir -p data");
-int choice;
+    const char* csv_path = (argc>1) ? argv[1] : "subscriber.csv";
+    int choice;
+
     while(1){
         display_menu();
-        if(scanf("%d", &choice)!=1){ printf("Invalid input\n"); return 0; }
-        getchar(); // eat newline
+        if(scanf("%d", &choice)!=1){ printf("อินพุตไม่ถูกต้อง\n"); return 0; }
+        getchar();
 
         if(choice==0) break;
-
-        if(choice==1){
-            User u;
-            printf("Name: ");    fgets(u.name, sizeof(u.name), stdin);       trim(u.name);
-            printf("Address: "); fgets(u.address, sizeof(u.address), stdin);  trim(u.address);
-            printf("Phone: ");   fgets(u.phone, sizeof(u.phone), stdin);      trim(u.phone);
-            if(add_user(csv_path, &u)) printf("Added.\n"); else printf("Add failed.\n");
-
+        else if(choice==1){
+            Subscriber s;
+            printf("ชื่อผู้สมัคร: "); fgets(s.name, sizeof(s.name), stdin); trim(s.name);
+            printf("บริการที่สมัคร: "); fgets(s.service, sizeof(s.service), stdin); trim(s.service);
+            printf("วันที่สมัคร (YYYY-MM-DD): "); fgets(s.start_date, sizeof(s.start_date), stdin); trim(s.start_date);
+            printf("ระยะเวลาสมัคร: "); fgets(s.duration, sizeof(s.duration), stdin); trim(s.duration);
+            add_user(csv_path,&s);
         }else if(choice==2){
-            char key[64];
-            printf("Search by name (substring) or phone (exact): ");
-            fgets(key, sizeof(key), stdin); trim(key);
-            User results[128];
-            int n = search_user(csv_path, key, results, 128);
-            printf("Found %d result(s)\n", n);
-            for(int i=0;i<n && i<128;i++) print_user(&results[i]);
-
+            char key[128]; printf("คำค้นหา: "); fgets(key, sizeof(key), stdin); trim(key);
+            Subscriber out[50]; int n=search_user(csv_path,key,out,50);
+            printf("พบ %d รายการ\n",n); for(int i=0;i<n;i++) print_sub(&out[i]);
         }else if(choice==3){
-            char key[64];
-            printf("Edit target (name or phone): "); fgets(key, sizeof(key), stdin); trim(key);
-            User u;
-            printf("New name: ");    fgets(u.name, sizeof(u.name), stdin);       trim(u.name);
-            printf("New address: "); fgets(u.address, sizeof(u.address), stdin);  trim(u.address);
-            printf("New phone: ");   fgets(u.phone, sizeof(u.phone), stdin);      trim(u.phone);
-            if(edit_user(csv_path, key, &u)) printf("Edited.\n"); else printf("Edit failed (not found?).\n");
-
+            char key[128]; printf("แก้ไขใคร: "); fgets(key, sizeof(key), stdin); trim(key);
+            Subscriber s; printf("ชื่อใหม่: "); fgets(s.name,96,stdin); trim(s.name);
+            printf("บริการใหม่: "); fgets(s.service,96,stdin); trim(s.service);
+            printf("วันที่ใหม่: "); fgets(s.start_date,32,stdin); trim(s.start_date);
+            printf("ระยะเวลาใหม่: "); fgets(s.duration,32,stdin); trim(s.duration);
+            edit_user(csv_path,key,&s);
         }else if(choice==4){
-            char key[64];
-            printf("Delete target (name or phone): ");
-            fgets(key, sizeof(key), stdin); trim(key);
-            if(delete_user(csv_path, key)) printf("Deleted.\n"); else printf("Delete failed (not found?).\n");
-
+            char key[128]; printf("ลบใคร: "); fgets(key,sizeof(key),stdin); trim(key);
+            delete_user(csv_path,key);
         }else if(choice==5){
             show_all(csv_path);
-
-        }else{
-            printf("Unknown choice.\n");
         }
     }
     return 0;
 }
+    
