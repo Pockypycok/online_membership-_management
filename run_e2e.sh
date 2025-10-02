@@ -1,23 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 make
-CSV="data/e2e.csv"
-cat > "$CSV" <<EOF
-Name, Address, PhoneNumber
-E2E One, Street 1, 111
-E2E Two, Street 2, 222
-EOF
-
+CSV="subscriber.csv"
 {
-  echo 1; echo "E2E Three"; echo "Street 3"; echo "333";
+  echo 1; echo "E2E Tester"; echo "Netflix"; echo "2025-04-01"; echo "1 เดือน";
   echo 2; echo "E2E";
-  echo 3; echo "333"; echo "E2E ThreeX"; echo "Street 3X"; echo "334";
-  echo 4; echo "111";
+  echo 3; echo "E2E Tester"; echo "E2E Updated"; echo "Disney+"; echo "2025-04-02"; echo "6 เดือน";
+  echo 4; echo "E2E Updated";
   echo 5;
   echo 0;
 } | ./app "$CSV" | tee e2e_output.txt
-
-echo "---- Summary ----"
-echo "Remaining lines in CSV (including header):"
-wc -l "$CSV"
-echo "Done."
