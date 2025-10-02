@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "subscriber.h"
+#include "csv_manager.h"
 
 static void print_sub(const Subscriber* s){
     printf("- %s | %s | %s | %s\n", s->name, s->service, s->start_date, s->duration);
