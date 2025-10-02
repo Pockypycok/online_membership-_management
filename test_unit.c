@@ -3,44 +3,39 @@
 #include <string.h>
 #include "../csv_manager.h"
 
-static const char* TMP = "data/test_unit.csv";
+static const char* TMP="tests/tmp.csv";
 
-static void reset(){
-    FILE* f = fopen(TMP, "w");
-    fprintf(f, "Name, Address, PhoneNumber\n");
-    fprintf(f, "Unit A, Addr A, 100\n");
-    fprintf(f, "Unit B, Addr B, 200\n");
+void reset(){
+    FILE* f=fopen(TMP,"w");
+    fprintf(f,"ชื่อผู้สมัคร,บริการที่สมัคร,วันที่สมัคร,ระยะเวลาสมัคร\n");
+    fprintf(f,"ทดสอบ1,Netflix,2025-01-01,12 เดือน\n");
     fclose(f);
 }
 
-void test_add_and_search(){
+void test_add_search(){
     reset();
-    User u = { "New Guy", "Somewhere", "300" };
-    assert(add_user(TMP, &u) && "add_user failed");
-
-    User out[10];
-    int n = search_user(TMP, "new", out, 10); // case-insensitive substring
-    assert(n == 1);
-    assert(strcmp(out[0].phone, "300")==0);
+    Subscriber s={"ทดสอบ2","Spotify","2025-02-01","6 เดือน"};
+    assert(add_user(TMP,&s));
+    Subscriber out[10];
+    int n=search_user(TMP,"ทดสอบ2",out,10);
+    assert(n==1);
 }
 
-void test_edit_and_delete(){
+void test_edit_delete(){
     reset();
-    User updated = { "Unit B2", "Addr B2", "201" };
-    assert(edit_user(TMP, "200", &updated) && "edit failed");
-
-    User out[10];
-    int n = search_user(TMP, "201", out, 10);
-    assert(n == 1 && strcmp(out[0].name, "Unit B2")==0);
-
-    assert(delete_user(TMP, "Unit B2") && "delete failed");
-    n = search_user(TMP, "201", out, 10);
-    assert(n == 0);
+    Subscriber s={"ทดสอบ1แก้ไข","Disney+","2025-02-01","3 เดือน"};
+    assert(edit_user(TMP,"ทดสอบ1",&s));
+    Subscriber out[10];
+    int n=search_user(TMP,"แก้ไข",out,10);
+    assert(n==1);
+    assert(delete_user(TMP,"แก้ไข"));
+    n=search_user(TMP,"แก้ไข",out,10);
+    assert(n==0);
 }
 
 int main(){
-    test_add_and_search();
-    test_edit_and_delete();
-    printf("All unit tests passed.\n");
+    test_add_search();
+    test_edit_delete();
+    printf("Unit tests passed.\n");
     return 0;
 }
