@@ -3,12 +3,12 @@
 #include <string.h>
 #include "csv_manager.h"
 
-static void print_sub(const Subscriber* s){
+static void print_user(const User* s){
     printf("- %s | %s | %s | %s\n", s->name, s->service, s->start_date, s->duration);
 }
 
 static void show_all(const char* path){
-    Subscriber* arr=NULL; int n = read_all_users(path, &arr);
+    User* arr=NULL; int n = read_all_users(path, &arr);
     if(n<=0){ printf("(ไม่มีข้อมูล)\n"); free(arr); return; }
     for(int i=0;i<n;i++) print_sub(&arr[i]);
     free(arr);
