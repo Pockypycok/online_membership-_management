@@ -15,7 +15,7 @@ static void show_all(const char* path){
 }
 
 int main(int argc, char** argv){
-    const char* csv_path = (argc>1) ? argv[1] : "subscriber.csv";
+    const char* csv_path = (argc>1) ? argv[1] : "users.csv";
     int choice;
 
     while(1){
