@@ -1,35 +1,27 @@
 #ifndef USER_H
 #define USER_H
 
-#include <stdio.h>
-#include <stdbool.h>
+#define NAME_LEN   100
+#define SRV_LEN    100
+#define DATE_LEN   16
+#define DUR_LEN    32
+#define STATUS_LEN 16
+#define EMAIL_LEN  128
+#define PHONE_LEN  32
+#define NOW_LEN    20
 
-#define NAME_LEN 96
-#define SRV_LEN 96
-#define DATE_LEN 32
-#define DUR_LEN 32
-
-// โครงสร้างข้อมูลผู้สมัคร
 typedef struct {
-    char name[NAME_LEN];        // ชื่อผู้สมัคร
-    char service[SRV_LEN];      // บริการที่สมัคร
-    char start_date[DATE_LEN];  // วันที่สมัคร
-    char duration[DUR_LEN];     // ระยะเวลาสมัคร
+    int  user_id;
+    char name[NAME_LEN];
+    char service[SRV_LEN];
+    char start_date[DATE_LEN];
+    char duration[DUR_LEN];
+    char expiry_date[DATE_LEN];
+    char status[STATUS_LEN];
+    char email[EMAIL_LEN];
+    char phone[PHONE_LEN];
+    char last_updated[NOW_LEN];
+    unsigned long long checksum;
 } User;
-
-// ฟังก์ชันหลัก
-FILE* open_file(const char* path, const char* mode);
-
-// CRUD
-bool add_user(const char* path, const User* u);
-bool edit_user(const char* path, const char* key, const User* updated);
-bool delete_user(const char* path, const char* key);
-int  search_user(const char* path, const char* key, User* out, int max_out);
-
-// Utility
-int  read_all_users(const char* path, User** out_list);
-bool write_all_users(const char* path, const User* list, int count);
-void trim(char* s);
-void display_menu(void);
 
 #endif
