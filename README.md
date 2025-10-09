@@ -58,8 +58,8 @@ Select option:
 ./app
 
 🔹 Windows (ใช้ MinGW หรือ WSL)
-เปิด Command Prompt หรือ PowerShell
-ใช้คำสั่ง:
+1.เปิด Command Prompt หรือ PowerShell
+2.ใช้คำสั่ง:
 gcc -std=c11 -Wall -O2 main.c csv_manager.c -o app.exe
-จากนั้นรัน:
+3.จากนั้นรัน:
 app.exe
