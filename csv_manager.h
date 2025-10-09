@@ -15,6 +15,13 @@ bool delete_user(const char* path, const char* key);
 bool recycle_deleted_user(const User* u);
 bool restore_user(const char* deleted_path, const char* users_path, const char* key);
 
+void add_user(const char *filename);
+int search_user(const char *filename, const char *key, User *out, int max_out);
+void edit_user(const char *filename);
+void delete_user(const char *filename);
+void display_all(const char *filename);
+void run_unit_tests(void);
+
 void display_menu(void);
 void display_table_header(void);
 void display_user_row(const User* u);
