@@ -59,7 +59,7 @@ int main(){
                 printf("ยกเลิก\n");
                 continue;
             }
-            delete_user(csv,key);
+            edit_user(csv,key);
         }else if(c==5) show_all(csv);
         else if(c==6) run_builtin_unit_tests(csv);
     }
