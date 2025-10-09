@@ -66,7 +66,7 @@ bool write_all_users_safe(const char* path,const User* list,int n){
     FILE*f=fopen(tmp,"w"); if(!f)return false;
     fprintf(f,"user_id,name,service,start_date,duration,expiry_date,status,email,phone,last_updated,checksum\n");
     for(int i=0;i<n;i++){User u=list[i]; u.checksum=compute_checksum(&u);
-        fprintf(f,"%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%llu\n",u.user_id,u.name,u.service,u.start_date,u.duration,u.expiry_date,u.status,u.email,u.phone,u.last_updated,u.checksum);}
+        fprintf(f,"%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",u.user_id,u.name,u.service,u.start_date,u.duration,u.expiry_date,u.status,u.email,u.phone,u.last_updated,u.checksum);}
     fclose(f); remove(path); rename(tmp,path); return true;
 }
 
