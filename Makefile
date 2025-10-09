@@ -26,10 +26,10 @@ $(TEST_TARGET): $(TEST_SRC)
 
 clean:
 	del /Q *.o *.exe *.tmp *.bak *.csv 2>nul || true
-	@echo "✅ Clean completed."
+	@echo "Clean completed."
 
 init:
 	echo user_id,name,service,start_date,duration,expiry_date,status,email,phone,last_updated,checksum > users.csv
-	@echo "📁 Created users.csv file."
+	@echo "Created users.csv file."
 
 
