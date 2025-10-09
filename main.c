@@ -49,6 +49,16 @@ int main(){
             edit_user(csv,key,&u);
         }else if(c==4){
             char key[64];printf("Delete key: ");fgets(key,64,stdin);trim(key);
+            User preview;
+            if(search_user(csv,key,&preview,1)>0){
+                printf("\n ข้อมูลที่จะลบ:\n");
+                display_table_header();
+                display_user_row(&preview);
+            }
+            if(!confirm_action("ยืนยันการลบ?")){
+                printf("ยกเลิก\n");
+                continue;
+            }
             delete_user(csv,key);
         }else if(c==5) show_all(csv);
         else if(c==6) run_builtin_unit_tests(csv);
