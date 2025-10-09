@@ -3,52 +3,55 @@
 #include <string.h>
 #include "csv_manager.h"
 
-static void print_user(const User* s){
-    printf("- %s | %s | %s | %s\n", s->name, s->service, s->start_date, s->duration);
-}
-
 static void show_all(const char* path){
-    User* arr=NULL; int n = read_all_users(path, &arr);
-    if(n<=0){ printf("(ไม่มีข้อมูล)\n"); free(arr); return; }
-    for(int i=0;i<n;i++) print_sub(&arr[i]);
+    User* arr=NULL; int n=read_all_users(path,&arr);
+    if(n<=0){printf("ไม่มีข้อมูล\n");free(arr);return;}
+    display_table_header();
+    for(int i=0;i<n;i++) display_user_row(&arr[i]);
+    printf("└────┴──────────────────────┴─────────────────┴────────────┴──────────┴────────────┴──────────┴────────────────────────┴───────────────┴────────────────────┘\n");
     free(arr);
 }
 
-int main(int argc, char** argv){
-    const char* csv_path = (argc>1) ? argv[1] : "users.csv";
-    int choice;
-
+int main(){
+    const char* csv="users.csv"; int c;
     while(1){
         display_menu();
-        if(scanf("%d", &choice)!=1){ printf("อินพุตไม่ถูกต้อง\n"); return 0; }
-        getchar();
-
-        if(choice==0) break;
-        else if(choice==1){
-            Subscriber s;
-            printf("ชื่อผู้สมัคร: "); fgets(s.name, sizeof(s.name), stdin); trim(s.name);
-            printf("บริการที่สมัคร: "); fgets(s.service, sizeof(s.service), stdin); trim(s.service);
-            printf("วันที่สมัคร (YYYY-MM-DD): "); fgets(s.start_date, sizeof(s.start_date), stdin); trim(s.start_date);
-            printf("ระยะเวลาสมัคร: "); fgets(s.duration, sizeof(s.duration), stdin); trim(s.duration);
-            add_user(csv_path,&s);
-        }else if(choice==2){
-            char key[128]; printf("คำค้นหา: "); fgets(key, sizeof(key), stdin); trim(key);
-            Subscriber out[50]; int n=search_user(csv_path,key,out,50);
-            printf("พบ %d รายการ\n",n); for(int i=0;i<n;i++) print_sub(&out[i]);
-        }else if(choice==3){
-            char key[128]; printf("แก้ไขใคร: "); fgets(key, sizeof(key), stdin); trim(key);
-            Subscriber s; printf("ชื่อใหม่: "); fgets(s.name,96,stdin); trim(s.name);
-            printf("บริการใหม่: "); fgets(s.service,96,stdin); trim(s.service);
-            printf("วันที่ใหม่: "); fgets(s.start_date,32,stdin); trim(s.start_date);
-            printf("ระยะเวลาใหม่: "); fgets(s.duration,32,stdin); trim(s.duration);
-            edit_user(csv_path,key,&s);
-        }else if(choice==4){
-            char key[128]; printf("ลบใคร: "); fgets(key,sizeof(key),stdin); trim(key);
-            delete_user(csv_path,key);
-        }else if(choice==5){
-            show_all(csv_path);
-        }
+        if(scanf("%d",&c)!=1) break; getchar();
+        if(c==0) break;
+        else if(c==1){
+            User u={0};
+            printf("Name: ");fgets(u.name,sizeof(u.name),stdin);trim(u.name);
+            printf("Service: ");fgets(u.service,sizeof(u.service),stdin);trim(u.service);
+            printf("Start Date (YYYY-MM-DD): ");fgets(u.start_date,sizeof(u.start_date),stdin);trim(u.start_date);
+            printf("Duration: ");fgets(u.duration,sizeof(u.duration),stdin);trim(u.duration);
+            printf("Expiry Date (YYYY-MM-DD): ");fgets(u.expiry_date,sizeof(u.expiry_date),stdin);trim(u.expiry_date);
+            printf("Status: ");fgets(u.status,sizeof(u.status),stdin);trim(u.status);
+            printf("Email: ");fgets(u.email,sizeof(u.email),stdin);trim(u.email);
+            printf("Phone: ");fgets(u.phone,sizeof(u.phone),stdin);trim(u.phone);
+            add_user(csv,&u);
+        }else if(c==2){
+            char key[100];printf("Search key: ");fgets(key,100,stdin);trim(key);
+            User out[256];int n=search_user(csv,key,out,256);
+            printf("พบ %d รายการ\n",n);
+            if(n>0){display_table_header();for(int i=0;i<n;i++)display_user_row(&out[i]);}
+        }else if(c==3){
+            char key[64];printf("Edit key: ");fgets(key,64,stdin);trim(key);
+            User u={0};
+            printf("New Name: ");fgets(u.name,sizeof(u.name),stdin);trim(u.name);
+            printf("New Service: ");fgets(u.service,sizeof(u.service),stdin);trim(u.service);
+            printf("New Start Date: ");fgets(u.start_date,sizeof(u.start_date),stdin);trim(u.start_date);
+            printf("New Duration: ");fgets(u.duration,sizeof(u.duration),stdin);trim(u.duration);
+            printf("New Expiry Date: ");fgets(u.expiry_date,sizeof(u.expiry_date),stdin);trim(u.expiry_date);
+            printf("New Status: ");fgets(u.status,sizeof(u.status),stdin);trim(u.status);
+            printf("New Email: ");fgets(u.email,sizeof(u.email),stdin);trim(u.email);
+            printf("New Phone: ");fgets(u.phone,sizeof(u.phone),stdin);trim(u.phone);
+            edit_user(csv,key,&u);
+        }else if(c==4){
+            char key[64];printf("Delete key: ");fgets(key,64,stdin);trim(key);
+            delete_user(csv,key);
+        }else if(c==5) show_all(csv);
+        else if(c==6) run_builtin_unit_tests(csv);
     }
+    printf("Bye!\n");
     return 0;
 }
-    
