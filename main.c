@@ -31,7 +31,8 @@ int main(){
             add_user(csv,&u);
         }else if(c==2){
             char key[100];printf("Search key: ");fgets(key,100,stdin);trim(key);
-            User out[256];int n=search_user(csv,key,out,256);
+            User out[256];
+            int n=search_user(filename,key,out,256);
             printf("พบ %d รายการ\n",n);
             if(n>0){display_table_header();for(int i=0;i<n;i++)display_user_row(&out[i]);}
         }else if(c==3){
