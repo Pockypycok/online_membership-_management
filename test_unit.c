@@ -25,10 +25,10 @@ static void reset_file(const char* path) {
 static void check(bool cond, const char* msg) {
     total++;
     if (cond) {
-        printf(GREEN "✅ PASS: %s\n" RESET, msg);
+        printf(GREEN "PASS: %s\n" RESET, msg);
         passed++;
     } else {
-        printf(RED "❌ FAIL: %s\n" RESET, msg);
+        printf(RED "FAIL: %s\n" RESET, msg);
     }
 }
 
@@ -112,14 +112,14 @@ static void summary() {
     printf(RED   "Failed: %d\n" RESET, total - passed);
     printf(CYAN "───────────────────────────────\n" RESET);
     if (passed == total)
-        printf(GREEN "🎉 ALL TESTS PASSED SUCCESSFULLY!\n" RESET);
+        printf(GREEN "ALL TESTS PASSED SUCCESSFULLY!\n" RESET);
     else
-        printf(RED "⚠️ Some tests failed. Check logic.\n" RESET);
+        printf(RED "Some tests failed. Check logic.\n" RESET);
 }
 
 /* --- Main --- */
 int main() {
-    printf(CYAN "\n🧪 RUNNING UNIT TESTS FOR MEMBERSHIP SYSTEM...\n" RESET);
+    printf(CYAN "\n RUNNING UNIT TESTS FOR MEMBERSHIP SYSTEM...\n" RESET);
     test_add_user();
     test_edit_user();
     test_delete_user();
