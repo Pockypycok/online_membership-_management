@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <time.h>
 
-/* สี ANSI */
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
 #define GREEN   "\033[32m"
@@ -26,7 +25,6 @@ unsigned long long compute_checksum(const User* u){
     return h;
 }
 
-/* Validation */
 bool validate_user(const User* u, char err[], size_t len){
     if(strlen(u->name)==0){snprintf(err,len,"ชื่อห้ามว่าง");return false;}
     if(strchr(u->email,'@')==NULL){snprintf(err,len,"อีเมลไม่ถูกต้อง");return false;}
@@ -72,7 +70,6 @@ bool write_all_users_safe(const char* path,const User* list,int n){
     fclose(f); remove(path); rename(tmp,path); return true;
 }
 
-/* Add */
 bool add_user(const char* path,const User* in){
     char err[128]; if(!validate_user(in,err,sizeof(err))){printf(RED "%s\n" RESET,err);return false;}
     User u=*in; if(u.user_id==0) u.user_id=generate_next_id(path);
@@ -84,7 +81,6 @@ bool add_user(const char* path,const User* in){
     return ok;
 }
 
-/* Edit */
 bool edit_user(const char* path,const char* key,const User* upd){
     User*a=NULL;int n=read_all_users(path,&a);int done=0;
     for(int i=0;i<n;i++) if(strstr(a[i].name,key)){User u=*upd;u.user_id=a[i].user_id;set_now(u.last_updated);update_auto_status(&u);a[i]=u;done=1;break;}
@@ -95,7 +91,6 @@ bool edit_user(const char* path,const char* key,const User* upd){
     return ok;
 }
 
-/* Confirm & Recycle */
 bool confirm_action(const char* msg){ char a[8]; printf(YELLOW "%s (y/n): " RESET,msg); fgets(a,sizeof(a),stdin); return tolower(a[0])=='y'; }
 
 bool recycle_deleted_user(const User* u){
@@ -107,7 +102,6 @@ bool recycle_deleted_user(const User* u){
     fclose(f); return true;
 }
 
-/* Delete */
 bool delete_user(const char* path,const char* key){
     User*a=NULL;int n=read_all_users(path,&a);if(n==0){printf("ไม่มีข้อมูล\n");return false;}
     int idx=-1; for(int i=0;i<n;i++) if(strstr(a[i].name,key)||strstr(a[i].email,key)){idx=i;break;}
@@ -121,7 +115,6 @@ bool delete_user(const char* path,const char* key){
     return ok;
 }
 
-/* Display */
 void display_table_header(void){
     printf(BOLD "┌────┬──────────────────────┬─────────────────┬────────────┬──────────┬────────────┬──────────┬────────────────────────┬───────────────┬────────────────────┐\n");
     printf("│ ID │ Name                 │ Service         │ Start Date │ Duration │ Expiry     │ Status   │ Email                  │ Phone         │ Last Updated       │\n");
@@ -132,10 +125,9 @@ void display_user_row(const User*u){
            u->user_id,u->name,u->service,u->start_date,u->duration,u->expiry_date,u->status,u->email,u->phone,u->last_updated);
 }
 
-/* Menu */
 void display_menu(void){
     printf(BOLD CYAN "\n╔══════════════════════════════════════════════════════════════════════╗\n");
-    printf("║   ONLINE MEMBERSHIP MANAGEMENT SYSTEM (CSV + SECURITY + COLOR)       ║\n");
+    printf("║                 ONLINE MEMBERSHIP MANAGEMENT SYSTEM                  ║\n");
     printf("╠══════════════════════════════════════════════════════════════════════╣\n");
     printf("║ 1) Add User                                                          ║\n");
     printf("║ 2) Search User                                                       ║\n");
@@ -147,5 +139,3 @@ void display_menu(void){
     printf("╚══════════════════════════════════════════════════════════════════════╝\n" RESET);
     printf(YELLOW "Select: " RESET);
 }
-
-
