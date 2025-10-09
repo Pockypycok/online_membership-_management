@@ -14,14 +14,12 @@
 
 static int total = 0, passed = 0;
 
-/* Utility: ล้างไฟล์ก่อนเทสต์ */
 static void reset_file(const char* path) {
     FILE* f = fopen(path, "w");
     fprintf(f, "user_id,name,service,start_date,duration,expiry_date,status,email,phone,last_updated,checksum\n");
     fclose(f);
 }
 
-/* Assertion พร้อมข้อความสี */
 static void check(bool cond, const char* msg) {
     total++;
     if (cond) {
